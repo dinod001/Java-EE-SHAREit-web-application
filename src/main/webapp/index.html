@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>File Upload Form</title>
+    <style>
+        /* General Reset */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: rgb(2, 2, 39);
+            color: #333;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            height: 100vh;
+            padding: 20px;
+        }
+        img{
+            height: 100px;
+            width: 100px;
+            border-radius: 0.5rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Container */
+        .container {
+            background: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            max-width: 400px;
+            width: 100%;
+            text-align: center;
+        }
+        h1 {
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            color: #000000;
+        }
+
+        /* File Input */
+        .file-label {
+            display: block;
+            margin-bottom: 20px;
+            font-size: 1rem;
+            color: #000000;
+            text-align: left;
+        }
+
+        input[type="file"] {
+            display: block;
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            background-color: #f9f9f9;
+            font-size: 0.9rem;
+            color: #333;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+
+        input[type="file"]:focus {
+            border-color: #007bff;
+        }
+
+        /* Submit Button */
+        .btn {
+            display: inline-block;
+            background-color: #007bff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+
+        .btn:hover {
+            background-color: #0056b3;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            h1 {
+                font-size: 1.25rem;
+            }
+
+            .btn {
+                width: 100%;
+                padding: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img src="./images/image.png" alt="image">
+    <div class="container">
+        <h1>JAVA EE SHAREit</h1>
+        <form action="" method="post" enctype="multipart/form-data" id="form">
+            <label for="file-upload" class="file-label">
+                Choose a file:
+                <input type="file" name="file" id="file-upload" required>
+            </label>
+            <button type="submit" class="btn" id="button">Upload</button>
+        </form>
+    </div>
+    <script>
+        const form = document.getElementById("form");
+        const fileInput = document.getElementById("file-upload");
+        
+        document.getElementById("button").onclick = function(event) {
+            event.preventDefault();
+            const file = fileInput.files[0]; 
+            const fileName = file.name; // Get the file name
+            const extension = fileName.split('.').pop(); // Get file extension
+
+            const formdata = new FormData();
+            formdata.append("image", file, fileName);
+
+            const requestOptions = {
+                method: "POST",
+                body: formdata,
+                redirect: "follow"
+            };
+
+            fetch(`http://192.168.214.3:8080/shareit?fileName=${fileName}&extension=${extension}`, requestOptions)
+                .then(response => response.text())
+                .then(result => {
+                    alert(result);
+                    form.reset();
+                })
+                .catch(error => console.error("Error:", error));
+        }
+    </script>
+</body>
+</html>
